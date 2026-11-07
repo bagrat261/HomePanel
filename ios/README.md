@@ -1,16 +1,52 @@
-# Native iPad client — incomplete source checkpoint
+# Native iPad client — ARMv7 build
 
-Mac build prerequisite: [observed toolchain results](../docs/MAC-TOOLCHAIN.md).
-Run `sh scripts/check-ios-toolchain.sh` before attempting the application build.
-The selected Xcode 27.0 SDK fails ARMv7 linking; producing an ARMv7 object file
-alone does not establish that an iOS 9 application can be built.
+The application is Objective-C/UIKit, with NSURLSession streaming and
+AVSampleBufferDisplayLayer. It contains no WebView. Chromium runs on the server;
+the iPad receives H.264 Baseline 3.1 at 1024×720 below a native 48px toolbar.
+The current build is an **unsigned jailbreak IPA**, not device-tested software.
 
-Implementation stopped at the user's request for a GitHub/Mac handoff.
+## Build
 
-Only `HomePanel/HPAnnexB.h`, `HPAnnexB.c`, `HPVideoView.h`, and `HPVideoView.m` exist. These are preliminary scanner and AVSampleBufferDisplayLayer decoder sources, not an application. They have NOT been compiled or run. No Xcode project, application entry point, network client, build scripts, tests, or IPA exists in this directory.
+```sh
+HOMEPANEL_IOS_SDK=/Applications/Xcode-10.1.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk \
+  sh scripts/build-ios.sh
+```
 
-The server `/api/display/*` protocol is NOT IMPLEMENTED. These files must not be presented as a working client.
+Output: `ios/build/HomePanel-armv7-jailbreak-unsigned.ipa`.
+The script first links a framework probe, checks ARMv7 and minimum iOS 9.0,
+then builds the real application and packages `Payload/HomePanel.app`.
+Build directories and IPA are intentionally ignored by Git.
 
-Before integration, implement and verify the full native shell and server display protocol from the Mac handoff. Use an Apple toolchain supporting iOS 9 and ARMv7 (such as Xcode 10.1 on a compatible Mac OS). A modern Xcode installation alone may not support this target. Verify a real Mach-O ARMv7 application and minimum deployment version before packaging Payload into an IPA. Signing/provisioning or jailbreak installation must be validated separately on the actual iPad.
+Verified build combination: Apple clang 21.0.0 from Xcode 27.0 with the official
+iPhoneOS 12.1 SDK from Xcode 10.1. The current SDK alone cannot link ARMv7.
+Xcode 10.1 was installed alongside Xcode 27; system selection is unchanged.
+Its old IDE was not launched. Historical signature verification with `codesign`
+reported `CSSMERR_TP_NOT_TRUSTED`; no trust bypass or OS setting change was used.
+See [toolchain provenance](../docs/MAC-TOOLCHAIN.md).
 
-Known review work: decoder overflow inside acceptNAL currently calls reset, which mutates the pending buffer while consume is iterating it; repair that path before use. Validate frame boundaries, multi-slice streams, SPS/PPS changes, missing AUD, packet fragmentation, truncated NALs, decoder backpressure, IDR recovery, main-thread rendering and a bounded serial networking queue. Confirm iOS 9 compilation and actual device decoding. The scanner currently has no executed boundary tests.
+## Install and connect
+
+Use a jailbreak installer that supports unsigned IPA and the device's signing
+bypass. Jailbreak alone does not guarantee installation. Alternatively import
+the IPA into Sideloadly for signing with your own Apple account/provisioning;
+this path has not been exercised here. No certificates or provisioning assets
+are bundled. Do not install an ARM64 substitute on this iPad.
+
+Start the optional [server renderer](../docs/REMOTE-DISPLAY.md), open HomePanel,
+tap «Связь», enter its LAN origin (for example `http://192.168.1.10:8090`) and
+the panel password. The address is saved; the password is never persisted.
+An ephemeral session remains in memory. HA/MA tokens remain on the server.
+
+«Дом» and «Музыка» select server surfaces. Tap controls and swipe vertically
+to scroll. The decoder reads frame identities from SEI; input carries both
+surface generation and frame identity. Stale frames/touches are rejected.
+Backgrounding stops stream input and decoding and releases the idle timer.
+Foregrounding reconnects. Missing fresh images disables input and shows offline.
+
+## Verification limits
+
+ARMv7 linking, IPA structure and pure C scanner/SEI tests passed on Mac.
+The documented decoder overflow was repaired by removing consumed bytes before
+dispatching a NAL and stopping iteration after reset. Actual iPad decoding,
+sleep/Wi-Fi recovery, memory, CPU and installation remain unverified.
+Server tests are not evidence of hardware decoding or display latency.

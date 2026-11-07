@@ -2,11 +2,26 @@
 
 ## Проверка Mac перед нативной сборкой
 
-Xcode 27.0 / SDK 27.0: создание ARMv7 object-файла прошло, линковка с UIKit,
-Foundation и libSystem не прошла: SDK не содержит ARMv7 slices. Настоящий IPA
-не собран. Команды, ограничения и повторяемая проверка:
-[MAC-TOOLCHAIN.md](MAC-TOOLCHAIN.md). Это не проверка работы приложения на iPad
-и не измерение производительности. Результаты Windows ниже относятся к исходному MVP.
+Xcode 27.0 / SDK 27.0 не содержит ARMv7 slices. После разрешённой пользователем
+установки официального Xcode 10.1 рядом с текущим сборка прошла: Apple clang 21
+и SDK iOS 12.1 создали настоящий ARMv7 executable с minimum iOS 9.0 и unsigned IPA.
+Команды и происхождение SDK: [MAC-TOOLCHAIN.md](MAC-TOOLCHAIN.md).
+
+Mac: Python 3.13.0, 50 pytest-тестов, Ruff, ES5 и браузерные регрессии прошли.
+Сканер Annex B и SEI проверен с AddressSanitizer/UndefinedBehaviorSanitizer.
+Отдельная проверка кода завершилась APPROVE после исправления отмены ввода,
+удержания единственного renderer и reconnect latch. Один прежний deprecation
+warning Starlette/httpx сохраняется. Type checker и нативный runtime QA не выполнялись.
+
+Настоящий H.264 декодирован: локальное касание изменило Demo-свет off→on и пиксели
+декодированного кадра; последний прогон 14.31 fps, 94.33 мс касание→изменённый кадр,
+около 49.68% одного ядра и 568.36 MiB суммарного RSS дерева процессов. Это короткий локальный
+прогон Mac, а не замеры iPad. Полные методика и ограничения:
+[REMOTE-DISPLAY.md](REMOTE-DISPLAY.md).
+
+Нативный запуск/установка на iPad, live HA/MA, запрет всех MA settings-dialog,
+Sideloadly, Docker и HAOS остаются непроверенными. Результаты Windows ниже относятся
+к исходному MVP; они не заменяют проверку новой версии на устройстве.
 
 ## Выполнено
 

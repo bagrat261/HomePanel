@@ -1,22 +1,21 @@
 # HomePanel
 
-> **Статус:** работающий веб-MVP и начальный черновик iOS-декодера.
-> Целевой продукт теперь — нативное приложение **iPad 2 / iOS 9.3.5–9.3.6 / ARMv7**,
-> устанавливаемое IPA через jailbreak либо подходящую подпись.
-> Нативного приложения и готового IPA пока нет. Следующая разработка выполняется на Mac.
+> **Статус:** собран настоящий неподписанный IPA нативного UIKit-клиента
+> **iPad 2 / iOS 9.3.5–9.3.6 / ARMv7**, добавлен опциональный серверный H.264 renderer.
+> ARMv7 и MinimumOSVersion 9.0 проверены; установка и декодирование на iPad ещё не проверены.
 >
 > **Начать продолжение:** [задание для Codex на Mac](MAC-CODEX-PROMPT.md).
-> **Не реализовано:** серверная отрисовка/H.264, полноценный native client,
-> настоящий Music Assistant UI в kiosk и редизайн под Home Assistant.
-> Windows используется только как среда разработки серверной части.
+> [Сборка и установка IPA](ios/README.md), [renderer, Music Assistant и замеры](docs/REMOTE-DISPLAY.md).
+> Music открывает настоящий MA frontend при наличии серверной конфигурации отдельного
+> ограниченного пользователя. Live MA и запрет его настроек требуют интеграционной проверки.
 
 Лёгкая локальная сенсорная панель для Home Assistant; текущий прототип интерфейса — веб-версия.
 Python 3.11+, FastAPI, HTML/CSS и JavaScript ES5. Лицензия MIT.
 
 ![Текущий веб-прототип, Demo Mode](docs/images/dashboard-demo.png)
 
-Это снимок проверенного веб-прототипа. Дизайн будет переработан под Home Assistant;
-нативный интерфейс Music Assistant на этом снимке не показан.
+Это исторический снимок исходного веб-прототипа, до перехода на нейтральные поверхности
+и голубой акцент Home Assistant. Нативный интерфейс Music Assistant здесь не показан.
 
 ## Быстрый старт на Windows
 
@@ -103,7 +102,7 @@ headers от произвольных прокси. Локальный HTTP не
 ## Safari iOS 9 / iPad 2
 
 Основной интерфейс использует ES5, XMLHttpRequest, обычные CSS-значения, floats и
-inline-block. Нет Grid, CSS variables, fetch, Promise, modules, optional chaining,
+inline-block. CSS-токены имеют обычные fallback-значения. Нет обязательных Grid, fetch, Promise, modules, optional chaining,
 backdrop-filter, обязательных внешних шрифтов или CDN.
 
 Реальный iPad 2 в этой среде **не тестировался**. Проверка ES5 и современного Chromium
@@ -136,9 +135,10 @@ Compose по умолчанию публикует **127.0.0.1:8090**. Файл 
 ## Разработка
 
 ```sh
-uv run --extra dev pytest
-uv run --extra dev ruff check homepanel tests
-uv run --extra dev ruff format --check homepanel tests
+uv sync --extra dev --extra renderer
+uv run pytest
+uv run ruff check homepanel tests scripts/display-smoke.py
+uv run ruff format --check homepanel tests scripts/display-smoke.py
 npm ci --ignore-scripts
 npm run check:es5
 ```

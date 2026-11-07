@@ -3,6 +3,25 @@
 Repository checked at `1cdf53d`. This is a build prerequisite report, not an
 implementation or device-performance result.
 
+## Follow-up: genuine native build achieved
+
+With the user's authorization, official `Xcode_10.1.xip` (5.63 GB shown by Apple)
+was downloaded through the authenticated Apple Developer archive and expanded
+into `/Applications/Xcode-10.1.app`. `/Applications/Xcode.app` and system selection
+were preserved. The legacy IDE/compiler was not executed. `xip` reported the
+Software Update signing certificate with validation not attempted; subsequent
+`codesign --verify` returned `CSSMERR_TP_NOT_TRUSTED`. No trust bypass was applied.
+
+Apple clang 21.0.0 from Xcode 27 successfully compiled and linked against the
+official iPhoneOS 12.1 SDK from Xcode 10.1. The framework probe and real HomePanel
+binary both identify as ARMv7; `LC_VERSION_MIN_IPHONEOS` is 9.0. The application
+was packaged in `Payload/HomePanel.app` as an unsigned jailbreak IPA. This does
+not prove launch, installation or hardware decoding on iPad 2. See
+[native build instructions](../ios/README.md) and [measurements](REMOTE-DISPLAY.md).
+
+The observations below record why the current SDK alone failed before the legacy
+SDK was available; they are retained as provenance rather than the current blocker.
+
 ## Observed environment
 
 - macOS 26.6.2 (25G83), ARM64 host.
@@ -47,15 +66,13 @@ and linker still has to pass the actual link and device tests.
 
 Apple downloads: https://developer.apple.com/download/all/
 
-## Scope still outstanding
+## Initial checkpoint and remaining verification
 
-The four requested handoff documents and native draft were read. The current
-native directory is still an incomplete decoder draft, including its documented
-overflow issue. There is no native application or IPA. No unofficial SDK was
-downloaded, no substitute binary was packaged, and no signing assets were used.
+The four requested handoff documents and native draft were read. The documented
+overflow path was repaired, a native application and renderer were implemented,
+and a real ARMv7 IPA was built. No unofficial SDK, substitute binary or signing
+assets were used.
 
-The HA visual redesign, renderer, authenticated display protocol, actual Music
-Assistant frontend, native networking/lifecycle and IPA packaging remain to be
-implemented. None is represented as complete by this prerequisite change.
-There are no measured latency, FPS, bandwidth, CPU or RAM results. Physical iPad,
-HA/MA integration, jailbreak installation and Sideloadly remain unverified.
+Local H.264 decoding, returned Demo touch, FPS, latency and server CPU/RAM were
+measured; results and limits are in REMOTE-DISPLAY.md. Physical iPad, live HA/MA,
+jailbreak installation, Sideloadly and container/HAOS deployment remain unverified.
