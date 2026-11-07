@@ -1,5 +1,7 @@
 # Native iPad client — ARMv7 build
 
+[Русская инструкция: сборка, установка и подключение](README.ru.md)
+
 The application is Objective-C/UIKit, with NSURLSession streaming and
 AVSampleBufferDisplayLayer. It contains no WebView. Chromium runs on the server;
 the iPad receives H.264 Baseline 3.1 at 1024×720 below a native 48px toolbar.

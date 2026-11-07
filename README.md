@@ -1,11 +1,20 @@
 # HomePanel
 
+## Инструкции на русском
+
+- [iPad 2: сборка, установка IPA и подключение](ios/README.ru.md)
+- [Запуск сервера, Music Assistant и измерения нагрузки](docs/REMOTE-DISPLAY.ru.md)
+- [Xcode, ARMv7 и проверенная комбинация инструментов сборки](docs/MAC-TOOLCHAIN.ru.md)
+
+Английские версии: [iPad](ios/README.md), [сервер](docs/REMOTE-DISPLAY.md),
+[инструменты сборки](docs/MAC-TOOLCHAIN.md).
+
 > **Статус:** собран настоящий неподписанный IPA нативного UIKit-клиента
 > **iPad 2 / iOS 9.3.5–9.3.6 / ARMv7**, добавлен опциональный серверный H.264 renderer.
 > ARMv7 и MinimumOSVersion 9.0 проверены; установка и декодирование на iPad ещё не проверены.
 >
 > **Начать продолжение:** [задание для Codex на Mac](MAC-CODEX-PROMPT.md).
-> [Сборка и установка IPA](ios/README.md), [renderer, Music Assistant и замеры](docs/REMOTE-DISPLAY.md).
+> [Сборка и установка IPA](ios/README.ru.md), [сервер, Music Assistant и замеры](docs/REMOTE-DISPLAY.ru.md).
 > Music открывает настоящий MA frontend при наличии серверной конфигурации отдельного
 > ограниченного пользователя. Live MA и запрет его настроек требуют интеграционной проверки.
 

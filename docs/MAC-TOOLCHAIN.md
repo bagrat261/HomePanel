@@ -1,5 +1,7 @@
 # Mac toolchain check — 2026-11-07
 
+[Русский отчёт об инструментах сборки](MAC-TOOLCHAIN.ru.md)
+
 Repository checked at `1cdf53d`. This is a build prerequisite report, not an
 implementation or device-performance result.
 

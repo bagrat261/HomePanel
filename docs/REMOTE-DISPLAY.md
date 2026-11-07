@@ -1,5 +1,7 @@
 # Remote display setup and measured limits
 
+[Русская инструкция: сервер, Music Assistant и измерения](REMOTE-DISPLAY.ru.md)
+
 HomePanel is a native Objective-C iPad client plus an optional renderer in the
 HomePanel server, separate from HA Core. The renderer executes Dashboard or the
 actual Music Assistant frontend in Chromium, captures JPEG on the server, and
