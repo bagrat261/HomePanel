@@ -1,5 +1,10 @@
 # Native iPad client — incomplete source checkpoint
 
+Mac build prerequisite: [observed toolchain results](../docs/MAC-TOOLCHAIN.md).
+Run `sh scripts/check-ios-toolchain.sh` before attempting the application build.
+The selected Xcode 27.0 SDK fails ARMv7 linking; producing an ARMv7 object file
+alone does not establish that an iOS 9 application can be built.
+
 Implementation stopped at the user's request for a GitHub/Mac handoff.
 
 Only `HomePanel/HPAnnexB.h`, `HPAnnexB.c`, `HPVideoView.h`, and `HPVideoView.m` exist. These are preliminary scanner and AVSampleBufferDisplayLayer decoder sources, not an application. They have NOT been compiled or run. No Xcode project, application entry point, network client, build scripts, tests, or IPA exists in this directory.
