@@ -7,6 +7,8 @@ import yaml
 from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, ValidationError, model_validator
 
+from homepanel.display_models import DisplayConfig
+
 
 class EntityConfig(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
@@ -47,6 +49,7 @@ class Settings(BaseModel):
     secure_cookie: bool = False
     allowed_hosts: list[str] = ["localhost", "127.0.0.1", "[::1]", "testserver"]
     poll_seconds: int = Field(default=5, ge=3, le=120)
+    display: DisplayConfig = Field(default_factory=DisplayConfig)
     entities: list[EntityConfig] = Field(default_factory=list)
     modes: list[ModeConfig] = Field(default_factory=default_modes)
 
@@ -89,6 +92,14 @@ def _read_settings() -> Settings:
             data[field] = os.environ[env]
     if "HOMEPANEL_ALLOWED_HOSTS" in os.environ:
         data["allowed_hosts"] = os.environ["HOMEPANEL_ALLOWED_HOSTS"].split(",")
+    display = data.setdefault("display", {})
+    for env, field in (
+        ("HOMEPANEL_DISPLAY_ENABLED", "enabled"),
+        ("MA_URL", "music_url"),
+        ("MA_TOKEN", "music_token"),
+    ):
+        if env in os.environ:
+            display[field] = os.environ[env]
     return Settings.model_validate(data)
 
 

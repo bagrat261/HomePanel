@@ -1,6 +1,12 @@
 title: Мой дом
 demo: true
 poll_seconds: 5
+display:
+  enabled: false
+  dashboard_url: http://127.0.0.1:8090
+  fps: 15
+  music_player: "true"
+  music_restricted_user: false
 allowed_hosts:
   - localhost
   - 127.0.0.1

@@ -32,7 +32,7 @@ test "$archs" = armv7 || { echo 'FAIL: expected ARMv7 executable.' >&2; exit 1; 
 xcrun otool -hv "$work/HomePanelProbe"
 xcrun otool -L "$work/HomePanelProbe"
 xcrun otool -l "$work/HomePanelProbe" > "$work/load-commands.txt"
-cat "$work/load-commands.txt"
+awk '/LC_VERSION_MIN_IPHONEOS/ { remaining = 4 } remaining > 0 { print; remaining-- }' "$work/load-commands.txt"
 if ! awk '
     $1 == "cmd" { version_command = ($2 == "LC_VERSION_MIN_IPHONEOS") }
     version_command && $1 == "version" && $2 == "9.0" { found = 1 }

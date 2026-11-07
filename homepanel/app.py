@@ -11,6 +11,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from homepanel.actions import service_call
 from homepanel.configuration import Settings, load_settings
 from homepanel.dashboard import dashboard
+from homepanel.display import Display, display_router
 from homepanel.integrations.demo import Demo, demo_entities, demo_modes
 from homepanel.integrations.home_assistant import HomeAssistant, UpstreamUnavailable
 from homepanel.models import Action, HAState, Login
@@ -24,6 +25,7 @@ def create_app(
     if config.demo:
         config = config.model_copy(update={"entities": demo_entities(), "modes": demo_modes()})
     security = Security(config)
+    display = Display(config.display, security)
     demo = Demo() if config.demo else None
     ha = None if config.demo else HomeAssistant(config, transport)
     static = Path(__file__).parent / "frontend"
@@ -31,6 +33,8 @@ def create_app(
     @asynccontextmanager
     async def lifespan(application: FastAPI):
         yield
+        if display.renderer:
+            display.renderer.stop()
         if ha:
             await ha.client.aclose()
 
@@ -38,6 +42,7 @@ def create_app(
         title="HomePanel", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None
     )
     application.add_middleware(TrustedHostMiddleware, allowed_hosts=config.allowed_hosts)
+    application.include_router(display_router(display))
 
     @application.middleware("http")
     async def boundary(request: Request, call_next):
