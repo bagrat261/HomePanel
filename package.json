@@ -1,0 +1,6 @@
+{
+  "name": "homepanel-checks",
+  "private": true,
+  "scripts": { "check:es5": "node scripts/check-es5.cjs" },
+  "devDependencies": { "acorn": "8.15.0" }
+}

@@ -1,0 +1,20 @@
+title: Мой дом
+demo: true
+poll_seconds: 5
+allowed_hosts:
+  - localhost
+  - 127.0.0.1
+entities: []
+modes:
+  - id: gaming
+    name: Gaming Mode
+    entity_id: null
+  - id: movie
+    name: Movie Mode
+    entity_id: null
+  - id: sleep
+    name: Sleep Mode
+    entity_id: null
+  - id: study
+    name: Study Mode
+    entity_id: null

@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling>=1.26,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "homepanel"
+version = "0.1.0"
+description = "A lightweight Home Assistant dashboard for older tablets"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = [
+  "fastapi>=0.115,<1", "uvicorn>=0.34,<1", "httpx>=0.28,<0.29",
+  "pydantic>=2.10,<3", "PyYAML>=6.0.2,<7", "python-dotenv>=1.0,<2"
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "ruff>=0.11,<1"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["homepanel"]
+
+[tool.hatch.build]
+exclude = ["/artifacts", "/.omo", "/ha-app/homepanel/source", "/.env", "/configuration/config.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S105", "S106"]

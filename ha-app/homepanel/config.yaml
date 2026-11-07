@@ -1,0 +1,33 @@
+name: HomePanel
+version: "0.1.0"
+slug: homepanel
+description: Lightweight touch dashboard for older tablets
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: manual
+stage: experimental
+init: true
+ports:
+  8090/tcp: null
+ports_description:
+  8090/tcp: HomePanel (enable for trusted LAN only)
+webui: http://[HOST]:[PORT:8090]
+options:
+  demo: true
+  panel_password: ""
+  ha_url: http://homeassistant:8123
+  ha_token: ""
+  allowed_hosts:
+    - localhost
+    - 127.0.0.1
+  panel_yaml: "title: Мой дом\nentities: []\n"
+schema:
+  demo: bool
+  panel_password: password
+  ha_url: url
+  ha_token: password
+  allowed_hosts:
+    - str
+  panel_yaml: str
